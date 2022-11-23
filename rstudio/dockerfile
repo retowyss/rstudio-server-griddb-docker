@@ -1,0 +1,15 @@
+# syntax=docker/dockerfile:1
+FROM rocker/tidyverse
+RUN  apt-get update && apt-get install -y \
+  default-jre \
+  default-jdk \
+  ant
+RUN R CMD javareconf   
+RUN install2.r --error \
+    rJava \
+    RJDBC \
+    markdown
+RUN git clone https://github.com/griddb/jdbc
+WORKDIR "/jdbc"
+RUN ant
+     

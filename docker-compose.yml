@@ -1,0 +1,38 @@
+version: '3'
+
+networks:
+  grid_net:
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+          gateway: 172.20.0.1
+
+services:
+
+  griddb:
+    container_name: griddb_server
+    image: griddb/griddb
+    env_file: griddb_env
+    networks:
+      grid_net:
+        ipv4_address: 172.20.0.42
+    volumes:
+      - "vol:/var/lib/gridstore"
+
+  rstudio:
+    container_name: rstudio_server
+    build:
+      context: ./rstudio
+      dockerfile: dockerfile
+    env_file: rstudio_env
+    networks:
+      grid_net:
+    volumes:
+      - "code:/home/rstudio/r_code"
+    ports:
+      - "8787:8787"
+
+
+volumes:
+    vol:
+    code: 
